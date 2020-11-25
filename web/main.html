@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Проверка лицензии МСК</title>
+        <script type="text/javascript" src="/eel.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;1,300&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="main.css">
+    </head>
+    
+    <body>
+        <h1 class="h1_header">Проверка лицензии МСК</h1>
+        <input type="file" id="file">
+        <hr>
+        <button id="go">Начать проверку</button>
+        <hr>
+        <div>
+            <div id="info"></div>
+            <p >Status: <span id="status"></span></p>
+            <span id="progress">0</span><span>/</span><span id="full">0</span>
+        </div>
+    <script type="text/javascript">
+
+        eel.expose(sizeData)   
+        function sizeData(uniq, full){
+            document.getElementById('info').innerHTML = `<p>Всего значений: ${full}</p><p>Уникальных значений: ${uniq}</p>`
+            document.getElementById('full').textContent = uniq
+        }
+
+        eel.expose(status)   
+        function status(st) {
+            document.getElementById('status').textContent = st
+        }
+
+        eel.expose(progress)   
+        function progress(pr){
+            document.getElementById('progress').textContent = pr
+        }
+
+        document.getElementById('go').addEventListener('click', () => {
+          let file = document.getElementById('file').files[0];
+          let reader = new FileReader()
+          reader.readAsText(file)
+
+          reader.onload = function() {
+            console.log(file.name, reader.result)
+            eel.transfer_data(file.name, reader.result);
+          }
+
+          console.log(file)          
+        })
+        
+        
+        
+        </script>
+    </body>
+</html>

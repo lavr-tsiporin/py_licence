@@ -1,0 +1,8 @@
+.vscode
+__pycache__
+build
+dist
+*.xlsx
+*.xls
+*.spec*
+.env
