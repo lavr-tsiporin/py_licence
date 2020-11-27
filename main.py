@@ -11,7 +11,7 @@ eel.init('web')
 
 @eel.expose
 def transfer_data(nameFile, dataFile):
-    nowDate = datetime.datetime.date(datetime.datetime.now())
+    nowDate = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     name = nameFile.split('.')
 
     wb = openpyxl.Workbook()
@@ -22,7 +22,7 @@ def transfer_data(nameFile, dataFile):
     ws['D1'] = 'license_change_date'
 
     arrayNumberMachine = dataFile.replace('\r', '').split('\n') 
-    arrayNumberMachineNoDooble = list(set(arrayNumberMachine))
+    arrayNumberMachineNoDooble = list(filter(None, list(set(arrayNumberMachine))))
     eel.sizeData(len(arrayNumberMachineNoDooble), len(arrayNumberMachine))
     eel.status('Progress')
 
