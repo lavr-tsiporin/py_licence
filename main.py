@@ -1,12 +1,14 @@
 import eel
 import requests
-import xlwt, openpyxl
+import openpyxl
 import datetime
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
-
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+if os.path.exists(dotenv_path):
+    load_dotenv(dotenv_path)
+   
 eel.init('web')
 
 @eel.expose
@@ -34,7 +36,6 @@ def transfer_data(nameFile, dataFile):
         ws[f'B{index}'] = dataResult[1]
         ws[f'C{index}'] = dataResult[2]
         ws[f'D{index}'] = dataResult[3]
-    # print('finish')
     wb.save(f'./{name[0]}_{str(nowDate)}.xlsx')
     eel.status(f'Finish, file created {name[0]}_{str(nowDate)}')
 
@@ -55,14 +56,22 @@ def requestData(number):
             date1 = ''
             date2 = ''
         else:
-            last = data['Infos'][-1]
-            cond = last['Condition']
-            date = last['ValidityDate'].split(' ')
-            date1 = date[1]
-            date2 = date[-1]
+            all = data['Infos']
+            dataCondition = [item for item in all if item['Condition'] == 'Действующее']
+            if len(dataCondition) >= 1:
+                last = dataCondition[-1]
+                cond = last['Condition']
+                date = last['ValidityDate'].split(' ')
+                date1 = date[1]
+                date2 = date[-1]
+            else:
+                last = data['Infos'][-1]
+                cond = last['Condition']
+                date = last['ValidityDate'].split(' ')
+                date1 = date[1]
+                date2 = date[-1]
             
         result = [number, cond, date1, date2]
-        # print(result)
         return result
     except:
         return [f'ошибка {number}', '', '', '']
